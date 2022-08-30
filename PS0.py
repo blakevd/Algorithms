@@ -10,7 +10,7 @@ def main():
         # sort the word alphabetically then add it to the list
         words.append("".join(sorted(input())))
         
-    return findAnagrams(words, int(numWords))
+    return numWords - findAnagrams(words, int(numWords))
     
 # sort 
 def findAnagrams(words, numWords): 
