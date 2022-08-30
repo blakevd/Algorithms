@@ -2,17 +2,7 @@
 # 8/30/22
 # PS0
 import sys
-
-def main():
-    numWords, numLetters = sys.stdin.readline().split(" ") # get n, k
-    words = []
-    
-    for word in range(int(numWords)):
-        # sort the word alphabetically then add it to the list
-        words.append("".join(sorted(sys.stdin.readline())))
-    
-    sys.stdout.write(str(findNonAnagrams(words, int(numWords)))) # print # of non anagrams
-    
+ 
 # compare sorted list of words to figure out anagrams 
 def findNonAnagrams(words, numWords): 
     not_anagrams = 0
@@ -22,7 +12,13 @@ def findNonAnagrams(words, numWords):
             not_anagrams += 1       
                 
     return not_anagrams
-    
-if __name__ == "__main__":
-    main()
-    
+
+# get n, k
+numWords, numLetters = sys.stdin.readline().split(" ") # get n, k
+words = []
+
+for word in range(int(numWords)):
+    # sort the word alphabetically then add it to the list
+    words.append("".join(sorted(sys.stdin.readline())))
+
+sys.stdout.write(str(findNonAnagrams(words, int(numWords)))) # print # of non anagrams
