@@ -10,21 +10,21 @@ def main():
         # sort the word alphabetically then add it to the list
         words.append("".join(sorted(input())))
         
-    print(int(numWords) - findAnagrams(words, int(numWords)))
+    print(findNonAnagrams(words, int(numWords)))
     
 # sort 
-def findAnagrams(words, numWords): 
-    anagrams = 0
+def findNonAnagrams(words, numWords): 
+    not_anagrams = 0
     
     for word in range(numWords): # loop through list
         for otherWord in range(numWords): # compare to rest of list
             if (word != otherWord): # dont compare to itself
-                # check if words match and if we did not already find it
-                if (words[word] == words[otherWord]):
-                    anagrams += 1
+                # check if words do not match
+                if (words[word] != words[otherWord]):
+                    not_anagrams += 1
                 
                 
-    return anagrams
+    return not_anagrams
     
 if __name__ == "__main__":
     main()
