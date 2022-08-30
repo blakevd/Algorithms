@@ -1,16 +1,17 @@
 # Blake Van Dyken
 # 8/30/22
 # PS0
+import sys
 
 def main():
-    numWords, numLetters = input().split(" ") # get n, k
+    numWords, numLetters = sys.stdin.readline().split(" ") # get n, k
     words = []
     
     for word in range(int(numWords)):
         # sort the word alphabetically then add it to the list
-        words.append("".join(sorted(input())))
-        
-    print(findNonAnagrams(words, int(numWords))) # print # of non anagrams
+        words.append("".join(sorted(sys.stdin.readline())))
+    
+    sys.stdout.write(str(findNonAnagrams(words, int(numWords)))) # print # of non anagrams
     
 # compare sorted list of words to figure out anagrams 
 def findNonAnagrams(words, numWords): 
