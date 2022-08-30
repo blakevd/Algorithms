@@ -10,7 +10,7 @@ def main():
         # sort the word alphabetically then add it to the list
         words.append("".join(sorted(input())))
         
-    print(findAnagrams(words, int(numWords)))
+    print(int(numWords) - findAnagrams(words, int(numWords)))
     
 # sort 
 def findAnagrams(words, numWords): 
@@ -18,12 +18,10 @@ def findAnagrams(words, numWords):
     
     for word in range(numWords): # loop through list
         for otherWord in range(numWords): # compare to rest of list
-            if (word == otherWord): # dont compare to itself
-                break
-            
-            # check if words match and if we did not already find it
-            if (words[word] == words[otherWord]):
-                anagrams += 1
+            if (word != otherWord): # dont compare to itself
+                # check if words match and if we did not already find it
+                if (words[word] == words[otherWord]):
+                    anagrams += 1
                 
                 
     return anagrams
