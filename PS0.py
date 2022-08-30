@@ -1,9 +1,6 @@
 # Blake Van Dyken
 # 8/30/22
 # PS0
-from ctypes import sizeof
-import sys
-from turtle import left
 
 def main():
     numWords, numLetters = input().split(" ") # get n, k
