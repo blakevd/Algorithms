@@ -10,9 +10,9 @@ def main():
         # sort the word alphabetically then add it to the list
         words.append("".join(sorted(input())))
         
-    print(findNonAnagrams(words, int(numWords)))
+    print(findNonAnagrams(words, int(numWords))) # print # of non anagrams
     
-# sort 
+# compare sorted list of words to figure out anagrams 
 def findNonAnagrams(words, numWords): 
     not_anagrams = 0
     
