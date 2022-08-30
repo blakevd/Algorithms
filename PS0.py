@@ -16,13 +16,9 @@ def main():
 def findNonAnagrams(words, numWords): 
     not_anagrams = 0
     
-    for word in range(numWords): # loop through list
-        for otherWord in range(numWords): # compare to rest of list
-            if (word != otherWord): # dont compare to itself
-                # check if words do not match
-                if (words[word] != words[otherWord]):
-                    not_anagrams += 1
-                
+    for word in range(numWords - 1): # loop through list
+        if (words[word] != words[word + 1]): # check if next item is anagram
+            not_anagrams += 1       
                 
     return not_anagrams
     
