@@ -4,25 +4,26 @@
 import sys
  
 # compare sorted list of words to figure out anagrams 
-def findNonAnagrams(words, numWords): 
-    anagrams = set({})
-    for word in range(numWords): # loop through list
-        for otherWord in range(word+1, numWords): # loop word against other words
-            if (words[word] == words[otherWord]): # check if next item is anagram
-                # add to list of anagrams if it is not in it
-                anagrams.add(word)
-                anagrams.add(otherWord)
-                continue # skip the rest of comparisons we will still find it (saves time)
-
-    return numWords - len(anagrams) # return total non anagrams
+def findNonAnagrams(list, numWords): 
+    non_anagrams = 0
+    for n in list:
+        if(list[n] == 1):
+            non_anagrams += 1
+            
+    return non_anagrams
+        
 
 # get n, k
 numWords, numLetters = sys.stdin.readline().split(" ") # get n, k
-words = []
+list = dict()
 
 # loop through input
 for word in range(int(numWords)):
     # sort the word alphabetically then add it to the list
-    words.append("".join(sorted(sys.stdin.readline()))) # get word from stdin
+    w = "".join(sorted(sys.stdin.readline()))
+    if (list.get(w) != None):
+        list[w] = list[w] + 1
+    else:
+        list[w] = 1
 
-sys.stdout.write(str(findNonAnagrams(words, int(numWords)))) # print # of non anagrams
+sys.stdout.write(str(findNonAnagrams(list, int(numWords)))) # print # of non anagrams
