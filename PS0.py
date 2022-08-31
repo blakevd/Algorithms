@@ -14,6 +14,7 @@ def findNonAnagrams(words, numWords):
                     anagrams.append(word)
                 if(not otherWord in anagrams):
                     anagrams.append(otherWord)
+                continue # skip the rest of comparisons we will still find it (saves time)
 
     return numWords - len(anagrams) # return total non anagrams
 
