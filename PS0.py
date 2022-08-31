@@ -5,15 +5,13 @@ import sys
  
 # compare sorted list of words to figure out anagrams 
 def findNonAnagrams(words, numWords): 
-    anagrams = []
+    anagrams = set({})
     for word in range(numWords): # loop through list
         for otherWord in range(word+1, numWords): # loop word against other words
             if (words[word] == words[otherWord]): # check if next item is anagram
                 # add to list of anagrams if it is not in it
-                if(not word in anagrams):
-                    anagrams.append(word)
-                if(not otherWord in anagrams):
-                    anagrams.append(otherWord)
+                anagrams.add(word)
+                anagrams.add(otherWord)
                 continue # skip the rest of comparisons we will still find it (saves time)
 
     return numWords - len(anagrams) # return total non anagrams
