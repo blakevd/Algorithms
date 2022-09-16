@@ -2,7 +2,8 @@
 # 8/30/22
 # PS1
 
-import numpy as np
+from statistics import median
+import sys
 
 def partition(array, pivot_i):
     lesser = []
@@ -19,52 +20,106 @@ def partition(array, pivot_i):
     return new_array, len(lesser) # len of lesser array is where pivot is
 
 # pass in array and find medians for an array with 5 elements
-def medianOfFive(array):  
-    array.sort() # sort 5 items for fast way to solve it
-    return array[2] # return 3thd item or second index is our middle element
+def medianOfFive(array, array_of_indexes):  
+    lista, listi = zip(*sorted(zip(array, array_of_indexes)))
+    return listi[2]  # return 3rd index of our sorted couple
 
 # finds kth biggest thing in array
 # mom select
 def mom_select(array, k):
     # base cases
-    if (len(array) <= 25):
-        array.sort()
-        return array[(int)(len(array)/2)]
-    #elif () # if all medians are the same
+    if (len(array) <= 25): # brute force      
+        lst = array
+        lst.sort()
+        return lst[(int)(len(lst)/2)]
     else:
-        m = (int)(len(array) / 5)
+        m = (int)(len(array) / 5) - 1
         median_of_five_list = []
-        for i in range(m):
-            median_of_five_list.append(medianOfFive(array[ (i+1 * 5 - 5) : (i+1 * 5) ]))
-            
+        
+        for i in range(m+1):
+            i=i+1
+            indexes = [5*i-5, 5*i-4, 5*i-3, 5*i-2, 5*i-1]
+            five_array = array[ ((5*i) - 5) : (5*i)]
+            median_of_five_list.append(medianOfFive(five_array, indexes))
+        
         # find pivot using mof
-        mom_pivot = mom_select(array[:m], m/2)
+        mom_pivot = mom_select(median_of_five_list[:m], m/2)
         
         # partition based on pivot
         arr, r = partition(array, mom_pivot)
         
         # recurse into either less or greater based on value at pivot
         if (k < r):
-            return mom_select(array[0:r-1], k)
+            return mom_select(array[:r-1], k)
         elif (k > r):
             return mom_select(array[r+1:], k-r)
 
-        return mom_pivot
+        return mom_pivot # maybe not -1
+
+
+def test2():
+    input_participants = sys.stdin.readline()
+    input_ids = sys.stdin.readline()
+    input_skills = sys.stdin.readline()
     
-def test():
-    small = [3, 1, 2, 0]
-    big = [5, 12, 7, 19, 100, 45, 63]
-    five = [1, 2, 3, 4, 5]
-    bigger = [16,48,13,24,39,24,39,35,40,48,17,48,41,11,32,21,19,19,9,10,41,30,12,18,38,45,36,24,26,42] #np.random.randint(50, size=30)
+    # take in input
+    ids = list(map(int, input_ids.split(" ")))
+    skills = list(map(int, input_skills.split(" ")))
     
-    print('testing partition')
-    print(partition(small, 1))
-    print(partition(big, 3))
+    orig_ids = ids.copy()
+    orig_skills = skills.copy()
     
-    print('testing median of five')
-    print(medianOfFive(five))
+    # check if all medians are the same
+    arr, piv = partition(skills, 1)
+    if(len(arr) == 1):
+        ids.sort()
+        return median(ids)
+    else:
+        piv = mom_select(skills, len(ids)/2)
+        arr, val = partition(skills, piv)
+        
+        i = arr.index(val)
+        L = 0
+        for x in arr[:i]:
+            L += x
+        R = 0
+        
+        for y in arr[i+1:]:
+            R += y
+
+        if (R > L):
+            return orig_ids[orig_skills.index(mom_select(arr[i+1:], 1))]
+        else:
+            return orig_ids[orig_skills.index(mom_select(arr[:i], 1))]
+
+def main():
+    # working?
+    input_participants = sys.stdin.readline()
+    input_ids = sys.stdin.readline()
+    input_skills = sys.stdin.readline()
     
-    print('mom select')
-    print(mom_select(bigger, 1))
+    # take in input
+    ids = list(map(int, input_ids.split(" ")))
+    skills = list(map(int, input_skills.split(" ")))
     
-test()
+    # sort ids to skills
+    sorted_ids, sorted_skills = zip(*sorted(zip(ids, skills)))
+    
+    w = sum(sorted_skills)/2
+    for n in range(len(sorted_skills)-1):
+        rsum = 0
+        if (sorted_skills[n] != len(sorted_skills)-1):
+            for r in sorted_skills[sorted_ids[n]:]:
+                rsum += r
+        
+        lsum = 0     
+        if (sorted_skills[n] != 0):  
+            for l in sorted_skills[:sorted_ids[n]-1]:
+                lsum += l
+        
+        if (lsum <= w and rsum <= w):
+            return sorted_ids[n]
+    
+    return sorted_ids[0]
+            
+print(main())
