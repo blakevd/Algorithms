@@ -56,8 +56,7 @@ def mom_select(array, k):
 
         return mom_pivot # maybe not -1
 
-
-def test2():
+def main():
     input_participants = sys.stdin.readline()
     input_ids = sys.stdin.readline()
     input_skills = sys.stdin.readline()
@@ -91,35 +90,5 @@ def test2():
             return orig_ids[orig_skills.index(mom_select(arr[i+1:], 1))]
         else:
             return orig_ids[orig_skills.index(mom_select(arr[:i], 1))]
-
-def main():
-    # working?
-    input_participants = sys.stdin.readline()
-    input_ids = sys.stdin.readline()
-    input_skills = sys.stdin.readline()
-    
-    # take in input
-    ids = list(map(int, input_ids.split(" ")))
-    skills = list(map(int, input_skills.split(" ")))
-    
-    # sort ids to skills
-    sorted_ids, sorted_skills = zip(*sorted(zip(ids, skills)))
-    
-    w = sum(sorted_skills)/2
-    for n in range(len(sorted_skills)-1):
-        rsum = 0
-        if (sorted_skills[n] != len(sorted_skills)-1):
-            for r in sorted_skills[sorted_ids[n]:]:
-                rsum += r
-        
-        lsum = 0     
-        if (sorted_skills[n] != 0):  
-            for l in sorted_skills[:sorted_ids[n]-1]:
-                lsum += l
-        
-        if (lsum <= w and rsum <= w):
-            return sorted_ids[n]
-    
-    return sorted_ids[0]
             
-print(main())
+main()
