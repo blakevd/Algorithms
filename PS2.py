@@ -1,48 +1,37 @@
-# Blake Van Dyken
+# Blake Van Dykenmemory[h][i]
 import sys
 
 NINF = -float("inf")
 
 def climb(totalHeight, n, memory, distances):
-    if (n <= 1):
-        return 100000
-    elif(n == 2):
-        if (distances[0] == distances[1]):
-            return distances[0]
-        return 100000
-    
     for i in range(n): # loop through rows
-        for h in range(totalHeight + 1): # loop through column
+        for h in range(totalHeight): # loop through column
             if(i == 0): # fill first column appropriately
                 if (h == 0):
-                    memory[0][0] = 0
-            elif(i == n-1): # we are in last column
-                result = memory[n-1][distances[n-1]]
-                if (result != NINF): # i = n - 1 is not INF
-                    return result
-            else: # fill in between columns
+                    memory[h][i] = 0
+            else: # fill in between columns and last col
                 nextDist = distances[i-1] # next distance we need to go up and down
-                
-                if(h - nextDist >= 0): # going up ?
-                    prev = memory[i - 1][h - nextDist]
-                    curr = memory[i][h]
-                    
-                    if (prev is not NINF):
-                        if(curr == NINF):
-                            if (prev >= h):
-                                curr = prev
-                            else:
-                                curr = h
-                        else:
-                            curr = min(prev, curr)
+                # set values to where they are in mem unless they are out of bounds
+                up, down = NINF, NINF # takes care of out of bounds case
                 if(h + nextDist <= totalHeight):
-                    prev = memory[i - 1][h + nextDist]
-                    curr = memory[i][h]
-                    
-                    
-                    
+                    up = memory[h + nextDist][i - 1]
+                if(h - nextDist >= 0):
+                    down = memory[h - nextDist][i - 1]
                 
+                if(down > up):
+                    memory[h][i] = h
+                elif(down < up and down is not NINF):
+                    memory[h][i] = down
+                elif(down < up and down is NINF):
+                    memory[h][i] = up
+                else:
+                    memory[h][i] = NINF # ???
 
+            if(i == n-1 and memory[h][i] is not NINF):
+                result = memory[h][i]
+                if (result != NINF and h - distances[i] == 0): # i = n - 1 is not INF
+                    return result
+    
     return 100000 # it is impossible
 
 
@@ -52,15 +41,9 @@ def main():
     totalHeight = sum(distances)
 
     # create 2D array for memoization/dynamic programming
-    # memory = [ [NINF]*(totalHeight+1) ]*n causes mem error dont use it
-    memory = []
-    for x in range(n):
-        temp = []
-        for y in range(totalHeight+1):
-            temp.append(NINF)
-        memory.append(temp)
-        
-    print(memory) 
+    col, row = n, totalHeight+1
+    memory = [[NINF for i in range(col)] for j in range(row)]
+    
     return climb(totalHeight, n, memory, distances)
 
 sys.stdout.write((str)(main()))
