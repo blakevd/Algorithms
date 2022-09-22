@@ -22,24 +22,19 @@ def climb(totalHeight, n, memory, distances):
                         else:
                             memory[h][i] = h
                             print("2chose: ",h,"over: ",down)
+                    
                 if(h + nextDist <= totalHeight):
                     up = memory[h + nextDist][i - 1]
-                    if(up is NINF): # ignores it if it is inf
-                        print("3chose: ",max(h, memory[h][i]),"over: ",min(h, memory[h][i]))
-                        memory[h][i] = max(h, memory[h][i]) # chooses between what down was stored in here or h
-                    else:
+                    if(up is not NINF):
                         if(memory[h][i] is not NINF):
                             print("4chose: ",min(up, memory[h][i]),"over: ",max(up, memory[h][i]))
                             memory[h][i] = min(up, memory[h][i]) # choose min between itsekf and down 
                         else:
                             print("4chose: ",up,"over: ",memory[h][i])
                             memory[h][i] = max(h, up)
-                
-            #if(i == n-2):
-                #print(memory[h][i])
+
             if(i == n-1 and memory[h][i] is not NINF):
                 result = memory[h][i]
-                #print(h, i, "mem: ", memory[h][i])
                 if (result != NINF and h - distances[i] == 0): # i = n - 1 is not INF
                     return result
     
