@@ -14,8 +14,9 @@ def climb(totalHeight, n, memory, distances):
                     memory[i][h] = NINF
 
             elif(i == n-1): # we are in last column
-                if (memory[i][distances[i]] != NINF): # i = n - 1 is not INF
-                    return i + 1
+                result = memory[n-1][distances[n-1]]
+                if (result != NINF): # i = n - 1 is not INF
+                    return result
                 
             else: # fill in between columns
                 nextDist = distances[i-1] # next distance we need to go up and down
@@ -27,7 +28,12 @@ def climb(totalHeight, n, memory, distances):
                 if(h - nextDist >= 0):
                     down = memory[i - 1][h - nextDist]
                 
-                if()
+                if(down > up):
+                    memory[i][h] = h
+                elif(down < up and down is not NINF):
+                    memory[i][h] = down
+                elif(down < up and down is NINF):
+                    memory[i][h] = up
 
     return 100000 # it is impossible
 
