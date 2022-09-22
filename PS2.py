@@ -23,19 +23,25 @@ def climb(totalHeight, n, memory, distances):
             else: # fill in between columns
                 nextDist = distances[i-1] # next distance we need to go up and down
                 
-                # set values to where they are in mem unless they are out of bounds
-                up, down = NINF, NINF # takes care of out of bounds case
+                if(h - nextDist >= 0): # going up ?
+                    prev = memory[i - 1][h - nextDist]
+                    curr = memory[i][h]
+                    
+                    if (prev is not NINF):
+                        if(curr == NINF):
+                            if (prev >= h):
+                                curr = prev
+                            else:
+                                curr = h
+                        else:
+                            curr = min(prev, curr)
                 if(h + nextDist <= totalHeight):
-                    up = (memory[i - 1][h + nextDist])
-                if(h - nextDist >= 0):
-                    down = (memory[i - 1][h - nextDist])
+                    prev = memory[i - 1][h + nextDist]
+                    curr = memory[i][h]
+                    
+                    
+                    
                 
-                if (down is not NINF and up is not NINF): # neither INF
-                    memory[i][h] = min(down, up)
-                elif(down is not NINF and up is NINF): # up is INF
-                    memory[i][h] = h
-                elif(down is NINF and up is not NINF): # down is inf
-                    memory[i][h] = up
 
     return 100000 # it is impossible
 
@@ -46,8 +52,15 @@ def main():
     totalHeight = sum(distances)
 
     # create 2D array for memoization/dynamic programming
-    memory = [ [NINF]*(totalHeight+1) ]*n
-    
+    # memory = [ [NINF]*(totalHeight+1) ]*n causes mem error dont use it
+    memory = []
+    for x in range(n):
+        temp = []
+        for y in range(totalHeight+1):
+            temp.append(NINF)
+        memory.append(temp)
+        
+    print(memory) 
     return climb(totalHeight, n, memory, distances)
 
 sys.stdout.write((str)(main()))
