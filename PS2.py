@@ -34,6 +34,8 @@ def climb(totalHeight, n, memory, distances):
                     memory[i][h] = down
                 elif(down < up and down is NINF):
                     memory[i][h] = up
+                else:
+                    memory[i][h] = NINF # ???
 
     return 100000 # it is impossible
 
@@ -46,8 +48,6 @@ def main():
     # create 2D array for memoization/dynamic programming
     memory = [ [0]*(totalHeight+1) ]*n
     
-    answer = climb(totalHeight, n, memory, distances)
-    print(memory)
-    return 1
+    return climb(totalHeight, n, memory, distances)
 
 sys.stdout.write((str)(main()))
