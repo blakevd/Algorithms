@@ -4,6 +4,9 @@ import sys
 NINF = -float("inf")
 
 def climb(totalHeight, n, memory, distances):
+    if(n == 0 or totalHeight == 0):
+        return 0
+    
     for i in range(n): # loop through rows
         for h in range(totalHeight): # loop through column
             if(i == 0): # fill first column appropriately
