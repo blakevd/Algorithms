@@ -19,9 +19,20 @@ def findShortestPath(n, k, art, memory):
         row = row + 1
         for block in range(k+1): # make room for last k
             if(max(memory[row-1][block]) >= 0):
-                memory[row][block] = art[row][0] + art[row][1] + max(memory[row-1][block])
-            if(block is not 0 and max(memory[row-1][block-1][0], memory[row-1][block-1][1])): # max between current and either blocks
-                memory[row][block][1] = 
+                memory[row][block][0] = art[row][0] + art[row][1] + max(memory[row-1][block]) # base case
+            
+            if(block != 0): # max between current and either blocks
+                maxOfNoneAndRight = max(memory[row-1][block-1][0], memory[row-1][block-1][1])
+                if(maxOfNoneAndRight >= 0):
+                    memory[row][block][1] = art[row][1] + maxOfNoneAndRight
+
+                maxOfNoneAndLeft = max(memory[row-1][block-1][0], memory[row-1][block-1][2])
+                if(maxOfNoneAndLeft >= 0):
+                    memory[row][block][2] = art[row][0] + maxOfNoneAndLeft
+
+
+    return max(memory[n-1][block]) # ans in last row      
+
 
 def main():
     NINF = -float("inf")
@@ -36,8 +47,8 @@ def main():
     for row in range(n+1):
         first, second = sys.stdin.readline().split(" ")
         if(row != n):
-            art[row][0] = first
-            art[row][1] = second
+            art[row][0] = (int)(first)
+            art[row][1] = (int)(second)
 
     # setup 3D array for dynamic prog
     # k+1 so we have room for when we are out of places to block
