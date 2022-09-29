@@ -11,25 +11,24 @@ def findShortestPath(n, k, art, memory):
     # memory[r][k][blocked col] for blocked col, 0 = neither, 1 = left, 2 = right
 
     memory[0][0][0] = art[0][0] + art[0][1] # neither are blocked so its the sum
-    memory[0][0][1] = art[0][0] # right is blocked, so it = right
-    memory[0][0][2] = art[0][1] # left is blocked, so it = left
+    memory[0][1][1] = art[0][0] # right is blocked, so it = right
+    memory[0][1][2] = art[0][1] # left is blocked, so it = left
    
     # loop through array
-    for row in range(n+1): # skip first element we already did
+    for row in range(n-1): # skip first element we already did
         row = row + 1
         for block in range(k+1): # make room for last k
             if(max(memory[row-1][block]) >= 0):
                 memory[row][block][0] = art[row][0] + art[row][1] + max(memory[row-1][block]) # base case
-            
-            if(block != 0): # max between current and either blocks
+                #print("either: ", art[row][0] + art[row][1] + max(memory[row-1][block]))
+            if(block != 0): # max between current and the left and the right blocks
                 maxOfNoneAndRight = max(memory[row-1][block-1][0], memory[row-1][block-1][1])
-                if(maxOfNoneAndRight >= 0):
-                    memory[row][block][1] = art[row][1] + maxOfNoneAndRight
+                memory[row][block][1] = art[row][1] + maxOfNoneAndRight
 
                 maxOfNoneAndLeft = max(memory[row-1][block-1][0], memory[row-1][block-1][2])
-                if(maxOfNoneAndLeft >= 0):
-                    memory[row][block][2] = art[row][0] + maxOfNoneAndLeft
-
+                memory[row][block][2] = art[row][0] + maxOfNoneAndLeft
+                #print("noR: ",maxOfNoneAndRight)
+                #print("noL: ", maxOfNoneAndLeft)
 
     return max(memory[n-1][block]) # ans in last row      
 
