@@ -3,8 +3,21 @@
 import sys
 
 def findShortestPath(n, k, art, memory):
-    # check base cases
-    
+    # check edge cases
+    if(k == 0): # sum of everything
+        total = 0
+        for col in range(2):
+            for row in range(n):
+                total += art[row][col]
+        return total
+    elif(k == n): # either sum of left or right side
+        left = 0
+        right = 0
+        for row in range(n):
+            left += art[row][0]
+            right += art[row][1]
+
+        return max(left, right)
     # setup first values
     # art[row][col]
     # k = 0 actual, 1 = neither, ...
@@ -18,6 +31,8 @@ def findShortestPath(n, k, art, memory):
     for row in range(n-1): # skip first element we already did
         row = row + 1
         for block in range(k+1): # make room for last k
+            if(memory[row-1][block] is -float("inf")):
+                continue # skip useless steps
             if(max(memory[row-1][block]) >= 0):
                 memory[row][block][0] = art[row][0] + art[row][1] + max(memory[row-1][block]) # base case
                 #print("either: ", art[row][0] + art[row][1] + max(memory[row-1][block]))
