@@ -6,9 +6,9 @@ def findShortestPath(n, k, art, memory):
     # check edge cases
     if(k == 0): # sum of everything
         total = 0
-        for col in range(2):
-            for row in range(n):
-                total += art[row][col]
+        for row in range(n):
+            total += art[row][0] + art[row][1]
+            
         return total
     elif(k == n): # either sum of left or right side
         left = 0
@@ -24,8 +24,8 @@ def findShortestPath(n, k, art, memory):
     # memory[r][k][blocked col] for blocked col, 0 = neither, 1 = left, 2 = right
 
     memory[0][0][0] = art[0][0] + art[0][1] # neither are blocked so its the sum
-    memory[0][1][1] = art[0][0] # right is blocked, so it = right
-    memory[0][1][2] = art[0][1] # left is blocked, so it = left
+    memory[0][1][1] = art[0][1] # right is blocked, so it = right
+    memory[0][1][2] = art[0][0] # left is blocked, so it = left
    
     # loop through array
     for row in range(n-1): # skip first element we already did
@@ -33,9 +33,10 @@ def findShortestPath(n, k, art, memory):
         for block in range(k+1): # make room for last k
             if(memory[row-1][block] is -float("inf")):
                 continue # skip useless steps
-            if(max(memory[row-1][block]) >= 0):
-                memory[row][block][0] = art[row][0] + art[row][1] + max(memory[row-1][block]) # base case
-                #print("either: ", art[row][0] + art[row][1] + max(memory[row-1][block]))
+            
+            memory[row][block][0] = art[row][0] + art[row][1] + max(memory[row-1][block]) # base case
+            #print("either: ", art[row][0] + art[row][1] + max(memory[row-1][block]))
+            
             if(block != 0): # max between current and the left and the right blocks
                 maxOfNoneAndRight = max(memory[row-1][block-1][0], memory[row-1][block-1][1])
                 memory[row][block][1] = art[row][1] + maxOfNoneAndRight
@@ -45,7 +46,7 @@ def findShortestPath(n, k, art, memory):
                 #print("noR: ",maxOfNoneAndRight)
                 #print("noL: ", maxOfNoneAndLeft)
 
-    return max(memory[n-1][block]) # ans in last row      
+    return max(memory[n-1][k]) # ans in last row      
 
 
 def main():
