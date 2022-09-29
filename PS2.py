@@ -1,4 +1,4 @@
-# Blake Van Dykenmemory[h][i]
+# Blake Van Dyken
 import sys
 
 NINF = -float("inf")
