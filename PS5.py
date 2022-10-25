@@ -38,25 +38,28 @@ def createGraph(map, width, height):
             if checkValidSpace(map[h][w]): # not a wall
                 # check for player pos
                 if (map[h][w] == 'P'):
-                    player_pos = (h,w)
+                    player_pos = (h,w,map[h][w])
                 # values are tuples of the index the Vertex is in the 2d array
                 # check below char technically h+1 goes down in 2d array
                 if h+1 < height and checkValidSpace(map[h+1][w]):
-                    updateGraphPair(graph, (h,w), (h+1,w))
+                    updateGraphPair(graph, (h,w,map[h][w]), (h+1,w,map[h+1][w]))
                 # check below char
                 if h-1 >= 0 and checkValidSpace(map[h-1][w]):
-                    updateGraphPair(graph, (h,w), (h-1,w))
+                    updateGraphPair(graph, (h,w,map[h][w]), (h-1,w,map[h-1][w]))
                 # check right side of char
                 if w+1 < width and checkValidSpace(map[h][w+1]):
-                    updateGraphPair(graph, (h,w), (h,w+1))
+                    updateGraphPair(graph, (h,w,map[h][w]), (h,w+1,map[h][w+1]))
                 # check left side of char
                 if w-1 >= 0 and checkValidSpace(map[h][w-1]):
-                    updateGraphPair(graph, (h,w), (h,w-1))
+                    updateGraphPair(graph, (h,w,map[h][w]), (h,w-1,map[h][w-1]))
                   
     return graph, player_pos          
 
 def isGold(v):
     return v == 'G'
+
+def isTrap(v):
+    return v == 'T'
 
 def main():
     # get input
@@ -73,12 +76,20 @@ def main():
         if vertex not in visited:
             visited.append(vertex)
             # check if we pick up gold
-            if (isGold(map[vertex[0]][vertex[1]])):
-                total_gold += 1
-                
-            # recurse into children
-            for child in graph:
-                bag.append(child)
+            if (isGold(vertex[2])):
+                total_gold += 1 
+            # recurse into edge if not connected to a trap
+            flag = False
+            edgesToAppend = []
+            for edge in graph[vertex]:
+                if (isTrap(edge[2])): # if we are connected to a trap stop
+                    flag = True
+                    break
+                edgesToAppend.append(edge)
+                # otherwise add all edges
+            
+            if flag is False:
+                bag = bag + edgesToAppend 
     
     return total_gold
 
