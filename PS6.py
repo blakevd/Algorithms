@@ -27,6 +27,7 @@ def input():
         edge = (line[1], line[2])
         addVertex(graph, line[0], edge)
         
+        
     return graph, ingredients
 
 # DFS and append post visit
