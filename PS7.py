@@ -61,7 +61,6 @@ def find_components(graph):
 # boruvkas method for MST
 def boruvka(graph):
     n = len(graph)
-    rope = 0
     # F = ((x,y) : (x, y), dist), ...)
     F = dict()
     for u in graph:
