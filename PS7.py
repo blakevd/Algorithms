@@ -68,10 +68,10 @@ def boruvka(graph):
         add_edge(F, u, set())
 
     # stop looping when F is a tree
-    while len(get_edges(F)) < (n - 1) / 2:
+    while len(get_edges(F)) < (n - 1):   
         comps = find_components(F)
         safe = get_safe_edges(graph, comps)
-        
+
         # add our safe edges to F
         for u, v, dist in safe:
             add_edge(F, u, (v, dist))
@@ -114,25 +114,20 @@ def input():
         u = vertices[a-1]
         v = vertices[b-1]
         ignore.append((u, v))
-        
+  
     # connect the first e values given in input
     if e > 1: # ignore base case, it will become its own single component anyway
-        walkable = []
-        for i in range(e):
-            walkable.append(vertices[i]) # add in order of input given
-        # connect them to eachother, does not matter how they connect they all have weight 0
-        for i in range(len(walkable) - 1):
-            u = walkable[i]
-            v = walkable[i+1] # 0 distance
-            
+        for i in range(e-1):
+            u = vertices[i]
+            v = vertices[i+1]
+
             ignore.append((u, v))
-    
     # connect all vertices to eachother
     # only add distances that are short to graph to make it faster
     for u in vertices:
         for v  in vertices:
             if u < v: # only go through half its undirected
-                if (u, v) in ignore: # give them 0 weight
+                if (u, v) in ignore or (v, u) in ignore: # give them 0 weight
                     add_edge(graph, u, (v, 0))
                     add_edge(graph, v, (u, 0))
                 else:
@@ -143,7 +138,7 @@ def input():
     return graph
 
 def main():
-    G = input()
+    G = input() 
     MST = boruvka(G)
     rope = 0
     
