@@ -114,17 +114,17 @@ def input():
         value = set()
         
         add_edge(graph, key, value)
-        vertices.append[key]
+        vertices.append(key)
     
     # get p input and add edges to graph
     for i in range(p):
-        a, b = list(map(int, sys.stdout.readline().split(' ')))
+        a, b = list(map(int, sys.stdin.readline().split(' ')))
         
         # correct the indexing to start at 0
         first = vertices[a-1]
         second = vertices[b-1]
         # (pos=(x, y), dist)
-        value = (second, distance(first, second))
+        value = (second, 0)
         
         add_edge(graph, first, value)
         
@@ -137,7 +137,7 @@ def input():
         # does not matter how they connect they all have weight 0
         for i in range(len(walkable) - 1):
             key = walkable[i]
-            value = (walkable[i+1], distance(walkable[i], walkable[i+1]))
+            value = (walkable[i+1], 0) # 0 distance
             
             add_edge(graph, key, value)
     return graph
