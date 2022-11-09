@@ -98,18 +98,45 @@ def add_edge(graph, k, v):
             graph[k] = {v}
 
 # takes in input and returns a graph based on requirements for assignment
-# graph = (ith, pos=(x, y)) : (ith, pos(x, y), dist)
+# coords/pos is unique
+# graph = (pos=(x, y)) : (pos=(x, y), dist)
 def input():
+    # read first line of input
     n, e, p = list(map(int, sys.stdin.readline().split(' ')))
     
     graph = dict() # create empty graph
-    # get all vertice positions
+    vertices = [] # keep track of ith vertice pos 
+    
+    # set up graph from vertice inputs
     for i in range(n):
         x, y = list(map(int, sys.stdin.readline().split(' ')))
-        add_edge(graph, )
+        key = ((x, y))
+        value = set()
+        
+        add_edge(graph, key, value)
+        vertices.append[key]
     
+    # get p input and add edges to graph
     for i in range(p):
-        v1, v2 = list(map(int, sys.stdout.readline().split(' ')))
+        a, b = list(map(int, sys.stdout.readline().split(' ')))
+        
+        # correct the indexing to start at 0
+        first = vertices[a-1]
+        second = vertices[b-1]
+        # (pos=(x, y), dist)
+        value = (second, distance(first, second))
+        
+        add_edge(graph, first, value)
+        
+    # connect the first e values given in input
+    if e > 1: # ignore base case
+        walkable = []
+        for i in range(e):
+            walkable.append(vertices[e])
+        for pos in walkable:
+            add_edge()
+    return graph
+        
         
 
 def main():
