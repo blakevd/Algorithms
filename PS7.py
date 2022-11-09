@@ -68,8 +68,10 @@ def boruvka(graph):
 
     # stop looping when F is a tree
     while len(get_edges(F)) < (n - 1):
-        print(len(get_edges(F)), n-1)
+        #print(len(get_edges(F)), n-1)
+       
         comps = find_components(F)
+        #print(comps.values())
         safe = get_safe_edges(graph, comps)
 
         # add our safe edges to F
