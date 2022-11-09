@@ -109,7 +109,7 @@ def input():
     
     # set up graph from vertice inputs
     for i in range(n):
-        x, y = list(map(int, sys.stdin.readline().split(' ')))
+        x, y = list(map(float, sys.stdin.readline().split(' ')))
         key = ((x, y))
         value = set()
         
@@ -129,17 +129,22 @@ def input():
         add_edge(graph, first, value)
         
     # connect the first e values given in input
-    if e > 1: # ignore base case
+    if e > 1: # ignore base case, it will become its own single component anyway
         walkable = []
         for i in range(e):
-            walkable.append(vertices[e])
-        for pos in walkable:
-            add_edge()
+            walkable.append(vertices[e]) # add in order of input given
+        # connect them
+        # does not matter how they connect they all have weight 0
+        for i in range(len(walkable) - 1):
+            key = walkable[i]
+            value = (walkable[i+1], distance(walkable[i], walkable[i+1]))
+            
+            add_edge(graph, key, value)
     return graph
-        
-        
 
 def main():
-    return
+    G = input()
+    
+    return G
 
 sys.stdout.write((str)(main()))
