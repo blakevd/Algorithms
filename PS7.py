@@ -142,22 +142,16 @@ def input():
            
     return graph
 
-# human readable graph
-def print_graph(G):
-    sum = 0
-    for u in G:
-        for v in G[u]:
-            print(u, ' connects to ', v[0], ' with w=', v[1])
-            sum += len(G[u])
-    print(sum)      
-    
-
 def main():
     G = input()
     MST = boruvka(G)
     rope = 0
     
+    for s in MST.values():
+        if len(s) > 0:
+            for edge in s:
+                rope += edge[1]
 
-    return MST
+    return rope
 
 sys.stdout.write((str)(main()))
