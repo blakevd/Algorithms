@@ -6,13 +6,6 @@ import math
 # helper expression to get dist between two vertices
 distance = lambda v1, v2 : math.sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2)
 
-# helper to print out graph
-def print_graph(graph):
-    edges = get_edges(graph)
-    print(sum(dist for _,_,dist in edges))
-    for u, v, dist in sorted(edges):
-        print(u, v)
-
 # gets all the edges in the given graph
 def get_edges(graph):
     edges = []
@@ -111,9 +104,8 @@ def input():
     for i in range(n):
         x, y = list(map(float, sys.stdin.readline().split(' ')))
         key = ((x, y))
-        value = set()
         
-        add_edge(graph, key, value)
+        add_edge(graph, key, set()) # empty graph for setup
         vertices.append(key)
     
     # get p input and add edges to graph
@@ -121,12 +113,12 @@ def input():
         a, b = list(map(int, sys.stdin.readline().split(' ')))
         
         # correct the indexing to start at 0
-        first = vertices[a-1]
-        second = vertices[b-1]
-        # (pos=(x, y), dist)
-        value = (second, 0)
+        u = vertices[a-1]
+        v = vertices[b-1]
+        dist = 0
         
-        add_edge(graph, first, value)
+        add_edge(graph, u, (v, dist))  # key : (pos=(x, y), dist)
+        add_edge(graph, v, (u, dist))
         
     # connect the first e values given in input
     if e > 1: # ignore base case, it will become its own single component anyway
@@ -136,10 +128,12 @@ def input():
         # connect them
         # does not matter how they connect they all have weight 0
         for i in range(len(walkable) - 1):
-            key = walkable[i]
-            value = (walkable[i+1], 0) # 0 distance
+            u = walkable[i]
+            v = walkable[i+1] # 0 distance
             
-            add_edge(graph, key, value)
+            add_edge(graph, u, (v, dist))
+            add_edge(graph, v, (u, dist))
+            
     return graph
 
 def main():
