@@ -23,28 +23,20 @@ def get_safe_edges(graph, comps):
     
     # maintain a list of each comps of the best edge we find
     # (u, v, distance), ...
-    best_edge = [(-1, -1, sys.maxsize) for _ in range(total_comps)]
-    
+    best_edge = [(None, None, sys.maxsize) for _ in range(total_comps)]
+
     # loop through all edges
     for u, v, dist in get_edges(graph):
-        if comps[u] == comps[v]: continue # this edge is useless
+        if comps[u] == comps[v]: continue # this edge is useless in same comp
         
-        if dist < best_edge[u][2]:
+        if dist < best_edge[comps[u]][2]:
             best_edge[comps[u]] = (u, v, dist)
         
-        if dist < best_edge[v][2]:
+        if dist < best_edge[comps[v]][2]:
             best_edge[comps[v]] = (u, v, dist)
        
     return best_edge
-
-# add safe edge to a graph
-def add_safe_edges(F, safe):
-    for u, v, dist in safe:
-        if not (v, dist) in F[u]:
-            F[u].append((v, dist))
-        if not (u, dist) in F[v]:
-            F[v].append((u, dist))
-            
+       
 # returns a dict of components in graph => (x, y) : component #
 def find_components(graph):
     comp = dict()
@@ -69,17 +61,20 @@ def find_components(graph):
 # boruvkas method for MST
 def boruvka(graph):
     n = len(graph)
-    
+    rope = 0
     # F = ((x,y) : (x, y), dist), ...)
     F = dict()
     for u in graph:
         add_edge(F, u, set())
 
     # stop looping when F is a tree
-    while len(get_edges(F)) < n - 1:
+    while len(get_edges(F)) < (n - 1) / 2:
         comps = find_components(F)
         safe = get_safe_edges(graph, comps)
-        add_safe_edges(F, safe)
+        
+        # add our safe edges to F
+        for u, v, dist in safe:
+            add_edge(F, u, (v, dist))
         
     return F
 
@@ -160,7 +155,9 @@ def print_graph(G):
 def main():
     G = input()
     MST = boruvka(G)
+    rope = 0
     
-    return 
+
+    return MST
 
 sys.stdout.write((str)(main()))
