@@ -1,7 +1,6 @@
 # Blake Van Dyken
 from sys import stdin, stdout, maxsize
 from math import sqrt
-import cProfile
 
 # gets all the edges in the given graph
 def get_edges(graph):
@@ -126,5 +125,4 @@ def main():
                 rope += edge[1]
     return str(rope/2)
 
-cProfile.run('main()')
-#stdout.write(main())
+stdout.write(main())
