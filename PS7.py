@@ -2,6 +2,7 @@
 import sys
 sys.setrecursionlimit(10000)
 import math
+import cProfile
 
 # helper expression to get dist between two vertices
 distance = lambda v1, v2 : math.sqrt((v1[0] - v2[0])**2 + (v1[1] - v2[1])**2)
@@ -11,29 +12,31 @@ def get_edges(graph):
     # (u, v, dist), ...
     edges = []
     for u in graph:
-        for v in graph[u]:
-            if u < v[0]: # don't waste time on other half of graph since it is undirected
-                edges.append((u, v[0], v[1]))
+        for v, dist in graph[u]:
+             if u < v: # don't waste time on other half of graph since it is undirected
+                edges.append((u, v, dist))
                 
     return edges
 
 # gets all safe edges in graph
 def get_safe_edges(graph, comps):
     total_comps = max(comps.values()) + 1
-    
     # maintain a list of each comps of the best edge we find
     # (u, v, distance), ...
     best_edge = [(None, None, sys.maxsize) for _ in range(total_comps)]
-
+    
     # loop through all edges
     for u, v, dist in get_edges(graph):
-        if comps[u] == comps[v]: continue # this edge is useless in same comp
+        Cu = comps[u]
+        Cv = comps[v]
         
-        if dist < best_edge[comps[u]][2]:
-            best_edge[comps[u]] = (u, v, dist)
+        if Cu == Cv: continue # this edge is useless in same comp
         
-        if dist < best_edge[comps[v]][2]:
-            best_edge[comps[v]] = (u, v, dist)
+        if dist < best_edge[Cu][2]:
+            best_edge[Cu] = (u, v, dist)
+        
+        if dist < best_edge[Cv][2]:
+            best_edge[Cv] = (u, v, dist)
        
     return best_edge
        
@@ -71,12 +74,14 @@ def boruvka(graph):
         #print(len(get_edges(F)), n-1)
        
         comps = find_components(F)
-        #print(comps.values())
-        safe = get_safe_edges(graph, comps)
 
+        safe = get_safe_edges(graph, comps)
         # add our safe edges to F
         for u, v, dist in safe:
-            add_edge(F, u, (v, dist))
+            if not (v, dist) in F[u]:
+                add_edge(F, u, (v, dist))
+            if not (u, dist) in F[v]:
+                add_edge(F, v, (u, dist))
         
     return F
 
@@ -159,6 +164,7 @@ def main():
             for edge in s:
                 rope += edge[1]
 
-    return rope
+    return rope/2
 
+#cProfile.run('main()')
 sys.stdout.write((str)(main()))
