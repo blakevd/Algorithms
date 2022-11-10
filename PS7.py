@@ -86,37 +86,33 @@ def read_input():
     # read first line of input
     n, e, p = stdin.readline().split(' ')
     graph = dict() # create empty graph
-    vertices, ignore = [], [] # keep track of ith vertice pos # edges to have 0 weight stored as ((x, y), (x2,y2))
     
     # set up graph from vertice inputs
     for _ in range(int(n)):
         x, y = stdin.readline().split(' ')
-        vertices.append((float(x), float(y)))
+        add_edge(graph, (float(x), float(y)), set())
     
+    d = list(graph.keys())
     # get p input and add edges to graph
     for i in range(int(p)):
-        a, b = stdin.readline().split(' ') 
-        # correct the indexing to start at 0
-        ignore.append((vertices[int(a)-1], vertices[int(b)-1]))
+        a, b = stdin.readline().split(' ')
+        add_edge(graph, d[int(a)-1], (d[int(b)-1], 0))
+        add_edge(graph, d[int(b)-1], (d[int(a)-1], 0))
   
     # connect the first e values given in input
     if int(e) > 1: # ignore base case, it will become its own single component anyway
         for i in range(int(e)-1):
-            ignore.append((vertices[i], vertices[i+1]))
-
-    # only add distances that are short to graph to make it faster
-    # create a connected graph
-    for u in vertices:
-        for v in vertices:
+            dist = 0
+            add_edge(graph, d[i], (d[i+1], dist))
+            add_edge(graph, d[i+1], (d[i], dist))
+    
+    for u in graph:
+        for v in graph:
             if u < v:
-                if (u, v) in ignore or (v, u) in ignore:
-                    add_edge(graph, u, (v, 0))
-                    add_edge(graph, v, (u, 0))
-                else:
-                    dist = sqrt((u[0] - v[0])**2 + (u[1] - v[1])**2)
-                    add_edge(graph, u, (v, dist))
-                    add_edge(graph, v, (u, dist))
-           
+                dist = sqrt((u[0] - v[0])**2 + (u[1] - v[1])**2)
+                add_edge(graph, u, (v, dist))
+                add_edge(graph, v, (u, dist))
+       
     return graph
 
 def main():
