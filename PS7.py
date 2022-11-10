@@ -1,61 +1,48 @@
 # Blake Van Dyken
-import sys
+from sys import stdin, stdout, maxsize
 from math import sqrt
-#import cProfile
+import cProfile
 
 # gets all the edges in the given graph
 def get_edges(graph):
     # (u, v, dist), ...
-    edges = []
-    for u in graph:
-        for v, dist in graph[u]:
-             if u < v: # don't waste time on other half of graph since it is undirected
-                edges.append((u, v, dist))
-                
-    return edges
+    return [(u, v[0], v[1]) for u in graph for v in graph[u] if u < v[0]]
 
 # gets all safe edges in graph
-def get_safe_edges(graph, comps):
-    total_comps = max(comps.values()) + 1
-    # maintain a list of each comps of the best edge we find
-    # (u, v, distance), ...
-    best_edge = [(-1, -1, sys.maxsize) for _ in range(total_comps)]
-    
+def get_safe_edges(graph, comps, total_comps):
+    # get safe edges
+    best_edge = [(-1, -1, maxsize) for _ in range(total_comps)]
     # loop through all edges
     for u, v, dist in get_edges(graph):
         Cu = comps[u]
         Cv = comps[v]
-        
         if Cu == Cv: continue # this edge is useless in same comp
         
         if dist < best_edge[Cu][2]:
             best_edge[Cu] = (u, v, dist)
-        
         if dist < best_edge[Cv][2]:
-            best_edge[Cv] = (u, v, dist)
-       
+            best_edge[Cv] = (u, v, dist)       
     return best_edge
        
 # returns a dict of components in graph => (x, y) : component #
 def find_components(graph):
     comp = dict()
     count = -1
-    
     for u in graph: # empty comp 
         comp[u] = None
-    
+        
     def dfs(u):
         if comp[u] == None:
             comp[u] = count
             for v in graph[u]:
                 dfs(v[0]) # get (x, y) ignore dist
-    
+                
     for u in graph:
         if comp[u] == None:
             count += 1
             dfs(u)
-    
-    return comp
+            
+    return comp, count + 1
 
 # boruvkas method for MST
 def boruvka(graph):
@@ -64,11 +51,14 @@ def boruvka(graph):
     F = dict()
     for u in graph:
         add_edge(F, u, set())
-
+        
     # stop looping when F is a tree
     while len(get_edges(F)) < (n - 1):
-        comps = find_components(F)
-        safe = get_safe_edges(graph, comps)
+        comps, max_comps = find_components(F)
+        # maintain a list of each comps of the best edge we find
+        # (u, v, distance), ...
+        safe = get_safe_edges(graph, comps, max_comps)
+        
         # add our safe edges to F
         for u, v, dist in safe:
             if u < v:
@@ -76,7 +66,6 @@ def boruvka(graph):
                     add_edge(F, u, (v, dist))
                 if not (u, dist) in F[v]:
                     add_edge(F, v, (u, dist))
-
     return F
 
 # adds vertex to graph
@@ -93,21 +82,20 @@ def add_edge(graph, k, v):
 # takes in input and returns a graph based on requirements for assignment
 # coords/pos is unique
 # graph = (pos=(x, y)) : (pos=(x, y), dist)
-def input():
+def read_input():
     # read first line of input
-    n, e, p = sys.stdin.readline().split(' ')
+    n, e, p = stdin.readline().split(' ')
     graph = dict() # create empty graph
-    vertices = [] # keep track of ith vertice pos 
-    ignore = [] # edges to have 0 weight stored as ((x, y), (x2,y2))
+    vertices, ignore = [], [] # keep track of ith vertice pos # edges to have 0 weight stored as ((x, y), (x2,y2))
     
     # set up graph from vertice inputs
-    for i in range(int(n)):
-        x, y = sys.stdin.readline().split(' ')
+    for _ in range(int(n)):
+        x, y = stdin.readline().split(' ')
         vertices.append((float(x), float(y)))
     
     # get p input and add edges to graph
     for i in range(int(p)):
-        a, b = sys.stdin.readline().split(' ') 
+        a, b = stdin.readline().split(' ') 
         # correct the indexing to start at 0
         ignore.append((vertices[int(a)-1], vertices[int(b)-1]))
   
@@ -117,7 +105,7 @@ def input():
             ignore.append((vertices[i], vertices[i+1]))
 
     # only add distances that are short to graph to make it faster
-    # create a connected graph by connecting all to first vertice
+    # create a connected graph
     for u in vertices:
         for v in vertices:
             if u < v:
@@ -132,7 +120,7 @@ def input():
     return graph
 
 def main():
-    G = input() 
+    G = read_input() 
     MST = boruvka(G)
     rope = 0
     
@@ -140,8 +128,7 @@ def main():
         if s != set():
             for edge in s:
                 rope += edge[1]
-
     return str(rope/2)
 
-#cProfile.run('main()')
-sys.stdout.write(main())
+cProfile.run('main()')
+#stdout.write(main())
