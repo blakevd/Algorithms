@@ -81,7 +81,7 @@ def boruvka(graph):
                     add_edge(F, u, (v, dist))
                 if not (u, dist) in F[v]:
                     add_edge(F, v, (u, dist))
-        
+
     return F
 
 # adds vertex to graph
@@ -126,7 +126,6 @@ def input():
         for i in range(e-1):
             u = vertices[i]
             v = vertices[i+1]
-
             ignore.append((u, v))
 
     # only add distances that are short to graph to make it faster
@@ -146,7 +145,6 @@ def input():
 
 def main():
     G = input() 
-    #return print_graph(G)
     MST = boruvka(G)
     rope = 0
     
@@ -155,7 +153,7 @@ def main():
             for edge in s:
                 rope += edge[1]
 
-    return rope/2
+    return str(rope/2)
 
 #cProfile.run('main()')
-sys.stdout.write((str)(main()))
+sys.stdout.write(main())
