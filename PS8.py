@@ -63,10 +63,10 @@ def input():
         add_edge(graph, key, (value, weight))
         add_edge(graph, value, (key, weight))
 
-    return graph, int(n), int(m)
+    return graph
 
 def main():
-    G, n, m = input()
+    G = input()
     dist = dijkstra(G, 0)
     stdout.write(str(dist[-1]))
 
