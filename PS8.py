@@ -1,4 +1,4 @@
-from sys import stdin, stdout, maxsize
+from sys import stdin, stdout
 from queue import PriorityQueue
 
 # adds vertex to graph
@@ -15,12 +15,12 @@ def add_edge(graph, k, v):
 # change all edge weights to be negative and then we will find longest path
 # follows non negative dijkstras structure
 def dijkstra(graph, start):
-    q = PriorityQueue()
     # initSSSP
     dist = []
+    q = PriorityQueue()
     # load priority queue
     for v in graph:
-        dist.append(-maxsize)
+        dist.append(-float('inf')) 
         q.put( (v, dist[v]) )
 
     while q.qsize() != 0:
