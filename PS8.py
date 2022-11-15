@@ -17,22 +17,21 @@ def add_edge(graph, k, v):
 def dijkstra(graph, size, start):
     q = PriorityQueue()
     # initSSSP
-    dist = [-float('inf') for _ in range(size)]
-    pred = [None for _ in range(size)]
-    
+    #dist = [-float('inf') for _ in range(size)]
+    #pred = [None for _ in range(size)]
+    dist, pred = [], []
     # load priority queue
     for v in graph:
+        dist.append(-float('inf'))
+        pred.append(None)
         q.put( (v, dist[v]) )
 
-    while not q.empty():
+    while q.qsize() != 0:
         # get next minheap item in pq
         next = q.get()
-        u = next[0]
-        u_dist = next[1] 
+        u, u_dist = next[0], next[1] 
         
-        for edge in graph[u]:
-            v = edge[0]
-            uv_dist = edge[1]
+        for v, uv_dist in graph[u]:
             if v != u: # make sure we are not back tracking through the undir graph
                 # tense => dist(u) + w(u->v) < dist(v) 
                 tense = u_dist * uv_dist       
@@ -42,7 +41,7 @@ def dijkstra(graph, size, start):
                 if tense > dist[v]: # check if tense
                     dist[v] = tense # relax
                     pred[v] = u
-
+                    # decrease key
                     q.put( (v, dist[v]) )
     
     return dist
