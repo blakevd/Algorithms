@@ -1,4 +1,4 @@
-from sys import stdin, stdout
+from sys import stdin, stdout, maxsize
 from queue import PriorityQueue
 
 # adds vertex to graph
@@ -20,7 +20,7 @@ def dijkstra(graph, start):
     dist = []
     # load priority queue
     for v in graph:
-        dist.append(-float('inf'))
+        dist.append(-maxsize)
         q.put( (v, dist[v]) )
 
     while q.qsize() != 0:
@@ -65,9 +65,4 @@ def input():
 
     return graph
 
-def main():
-    G = input()
-    dist = dijkstra(G, 0)
-    stdout.write(str(dist[-1]))
-
-main()
+stdout.write(str( dijkstra(input(), 0)[-1] ))
