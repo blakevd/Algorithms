@@ -42,7 +42,7 @@ def dijkstra(graph, size, start):
                 if tense > dist[v]: # check if tense
                     dist[v] = tense # relax
                     pred[v] = u
-                    print('pred of ', v, 'is', u)
+
                     q.put( (v, dist[v]) )
     
     return dist
