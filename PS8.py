@@ -1,17 +1,6 @@
 from sys import stdin, stdout
 from queue import PriorityQueue
 
-# adds vertex to graph
-# dict and set will have no duplicates
-def add_edge(graph, k, v):
-    if (v == set()):
-        graph[k] = set()
-    else:
-        try:  
-            graph[k].add(v)
-        except KeyError:
-            graph[k] = {v}
-
 # change all edge weights to be negative and then we will find longest path
 # follows non negative dijkstras structure
 def dijkstra(graph, q, dist, start):
@@ -36,12 +25,11 @@ def dijkstra(graph, q, dist, start):
 # take input and store as graph as defined in problem
 def input():
     n, m = stdin.readline().split(' ')
-    graph = dict()
+    graph = [[] for _ in range(int(n))]
     dist = []
     q = PriorityQueue()
     
     for i in range( int(n) ):
-        add_edge(graph, i, set())
         dist.append(-float('inf')) 
         q.put( (i, dist[i]) )
     
@@ -56,8 +44,8 @@ def input():
         weight = float(f) # 0 <= f <= 1
         
         # add undirected edge to adjacency list
-        add_edge(graph, key, (value, weight))
-        add_edge(graph, value, (key, weight))
+        graph[key].append((value, weight))
+        graph[value].append((key, weight))
 
     return graph, q, dist
 
