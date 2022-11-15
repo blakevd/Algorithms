@@ -16,7 +16,9 @@ def add_edge(graph, k, v):
 # follows non negative dijkstras structure
 def dijkstra(graph, size, start):
     q = PriorityQueue()
-    dist = [-float('inf') for _ in range(size)] # initSSSP
+    # initSSSP
+    dist = [-float('inf') for _ in range(size)]
+    pred = [None for _ in range(size)]
     
     # load priority queue
     for v in graph:
@@ -27,19 +29,20 @@ def dijkstra(graph, size, start):
         next = q.get()
         u = next[0]
         u_dist = next[1] 
-        print('u', u)
+        
         for edge in graph[u]:
-                v = edge[0]
-                uv_dist = edge[1]
-                
+            v = edge[0]
+            uv_dist = edge[1]
+            if v != u: # make sure we are not back tracking through the undir graph
                 # tense => dist(u) + w(u->v) < dist(v) 
                 tense = u_dist * uv_dist       
                 if u == start: # we are at first edge so don't multiply by 0
                     tense = uv_dist
-                print('check ', tense, dist[v])
+                
                 if tense > dist[v]: # check if tense
                     dist[v] = tense # relax
-                    print('adding', (v, dist[v]))
+                    pred[v] = u
+                    print('pred of ', v, 'is', u)
                     q.put( (v, dist[v]) )
     
     return dist
@@ -49,7 +52,7 @@ def input():
     n, m = stdin.readline().split(' ')
     graph = dict()
 
-    for i in range( int(m) ):
+    for i in range( int(n) ):
         add_edge(graph, i, set())
     
     for _ in range( int(m) ):
@@ -64,13 +67,14 @@ def input():
         
         # add undirected edge to adjacency list
         add_edge(graph, key, (value, weight))
+        add_edge(graph, value, (key, weight))
 
-    return graph, int(m), int(n)
+    return graph, int(n), int(m)
 
 def main():
-    G, m, n = input()
-    dist = dijkstra(G, m, 0)
+    G, n, m = input()
+    dist = dijkstra(G, n, 0)
     
-    return dist
+    return dist[-1] # last element is the best distance
 
 stdout.write(str(main()))
