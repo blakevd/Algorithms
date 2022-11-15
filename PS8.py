@@ -1,6 +1,6 @@
 # Blake Van Dyken
 from sys import stdin, stdout
-from queue import PriorityQueue
+from heapq import heapify, heappush, heappop
 
 # adds vertex to graph
 # dict and set will have no duplicates
@@ -16,9 +16,9 @@ def add_edge(graph, k, v):
 # change all edge weights to be negative and then we will find longest path
 # follows non negative dijkstras structure
 def dijkstra(graph, q, dist, start):
-    while q.qsize() != 0:
+    while len(q) != 0:
         # get next minheap item in pq
-        next = q.get()
+        next = heappop(q)
         u, u_dist = next[0], next[1] 
         
         for v, uv_dist in graph[u]:
@@ -30,7 +30,7 @@ def dijkstra(graph, q, dist, start):
                 if tense > dist[v]: # check if tense
                     dist[v] = tense # relax
                     # decrease key
-                    q.put( (v, dist[v]) )
+                    heappush(q, (v, dist[v]) )
     
     return dist
 
@@ -39,12 +39,13 @@ def input():
     n, m = stdin.readline().split(' ')
     graph = dict()
     dist = []
-    q = PriorityQueue()
+    q = []
+    heapify(q)
     
     for i in range( int(n) ):
         add_edge(graph, i, set())
         dist.append(-float('inf')) 
-        q.put( (i, dist[i]) )
+        heappush(q, (i, dist[i]) )
     
     for _ in range( int(m) ):
         # 2<=x<=10000
