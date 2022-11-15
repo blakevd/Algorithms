@@ -14,11 +14,9 @@ def add_edge(graph, k, v):
 
 # change all edge weights to be negative and then we will find longest path
 # follows non negative dijkstras structure
-def dijkstra(graph, size, start):
+def dijkstra(graph, start):
     q = PriorityQueue()
     # initSSSP
-    #dist = [-float('inf') for _ in range(size)]
-    #pred = [None for _ in range(size)]
     dist, pred = [], []
     # load priority queue
     for v in graph:
@@ -72,8 +70,7 @@ def input():
 
 def main():
     G, n, m = input()
-    dist = dijkstra(G, n, 0)
-    
-    return dist[-1] # last element is the best distance
+    dist = dijkstra(G, 0)
+    stdout.write(str(dist[-1]))
 
-stdout.write(str(main()))
+main()
