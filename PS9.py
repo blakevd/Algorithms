@@ -1,7 +1,7 @@
 # Blake Van Dyken
 from sys import stdin, stdout
 from math import sqrt
-from copy import deepcopy
+
 # For APSP
 def FloydWarshall(graph, pos):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
@@ -45,8 +45,7 @@ def input():
         graph[a].add(b)
         graph[b].add(a)
     
-    print()
-    # add another road that is the shortest road
+    # make list of roads that are not in graph
     extra = [] # list of edges we will try adding
     for i in range(n):
         for j in range(n):
@@ -58,33 +57,39 @@ def input():
 
 def main():
     graph, pos, extra = input()
-    totals = []
-    
+   
+    # if we have no extra edges to try in the graph
     if len(extra) == 0:
         dist = FloydWarshall(graph, pos)
         total = 0
         for i in range(len(dist)):
             for j in range(len(dist)):
-                if i != j:
+                if i < j:
                    # print(i, j, dist[i][j])
                     total += dist[i][j]
 
-        return total/2
-
+        return total
+    # otherwise try adding extra intersection and find APSP
+    min = float('inf')
     for u, v in extra:
-        g = deepcopy(graph)
-        g[u].add(v)
-        g[v].add(u)
+        graph[u].add(v)
+        graph[v].add(u)
 
-        dist = FloydWarshall(g, pos)
+        dist = FloydWarshall(graph, pos)
         total = 0
         for i in range(len(dist)):
             for j in range(len(dist)):
-                if i != j:
+                if i < j:
                    # print(i, j, dist[i][j])
                     total += dist[i][j]
-        totals.append(total/2)
+                    if total > min:
+                        break
+            if total > min:
+                break
+        if total < min:
+            min = total
+        graph[u].remove(v)
+        graph[v].remove(u)
 
-    return min(totals)
-
+    return min
 stdout.write(str(main()))
