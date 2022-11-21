@@ -47,7 +47,6 @@ def input():
     
     #print()
     # add another road that is the shortest road
-    # does not work for all edges dosnt find best edge yet
     min = float('inf')
     x, y = -1, -1
     for i in range(n):
@@ -55,10 +54,10 @@ def input():
             if i != j:
                 dist = sqrt( (pos[i][0] - pos[j][0])**2 + (pos[i][1] - pos[j][1])**2 )
                 if dist < min:
-                    if j not in graph[i] or i not in graph[j]:
+                    #if j not in graph[i] or i not in graph[j]:
                         min = dist
                         x, y = i, j
-    if min != float('inf'):
+    if y not in graph[x] and x not in graph[y]:
         #print('min',min,x,y)
         graph[x].add(y)
         graph[y].add(x)
@@ -67,7 +66,9 @@ def input():
 
 def main():
     graph, pos = input()
+
     dist = FloydWarshall(graph, pos)
+    
     total = 0
     
     s = len(dist)
