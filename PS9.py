@@ -47,7 +47,7 @@ def input():
         graph[a].add(b)
         graph[b].add(a)
     
-    print()
+    #print()
     # add another road that is the shortest road
     min = float('inf')
     x, y = -1, -1
@@ -60,7 +60,7 @@ def input():
                         min = dist
                         x, y = i, j
     if y not in graph[x] and x not in graph[y]:
-        print('min',min,x,y)
+        #print('min',min,x,y)
         graph[x].add(y)
         graph[y].add(x)
 
@@ -77,7 +77,7 @@ def main():
     for i in range(s):
         for j in range(s):
             if i != j:
-                print(i, j, dist[i][j])
+                #print(i, j, dist[i][j])
                 total += dist[i][j]
     
     return total/2
