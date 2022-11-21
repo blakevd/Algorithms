@@ -1,27 +1,30 @@
 # Blake Van Dyken
 from sys import stdin, stdout
+from math import sqrt
 
 # no duplicate roads or intersections
 def input():
-    graph = dict()
-    locations = []
     # vertices
     n = int(stdin.readline())
+    graph = [[None for col in range(n)] for row in range(n)] # 2D array for storage of position VxV
+    pos = []
     for i in range(n):
         x, y = stdin.readline().split(' ')
         x = int(x)
         y = int(y)
         
-        locations[i] = (x, y)
-        graph[i] = [] # store unique coord as a vertice to empty adjacency list
+        pos.append((x, y)) # store unique coords in list
     
     # connections/edges
     m = int(stdin.readline())
     for i in range(m):
         a, b = stdin.readline().split(' ')
-        b = int(x)
-        y = int(y)
-    return graph, locations
+        a = int(a)
+        b = int(b)
+        
+        # append distance to 2D array
+        graph[a][b] = (sqrt( (pos[b][0] - pos[a][0])**2 + (pos[b][1] - pos[a][1])**2 ))
+    return graph
 
 def main():
     return
