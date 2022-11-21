@@ -47,6 +47,7 @@ def input():
         graph[a].add(b)
         graph[b].add(a)
     
+    print()
     # add another road that is the shortest road
     min = float('inf')
     x, y = -1, -1
@@ -67,6 +68,7 @@ def input():
 
 def main():
     graph, pos = input()
+
     dist = FloydWarshall(graph, pos)
     
     total = 0
@@ -75,7 +77,7 @@ def main():
     for i in range(s):
         for j in range(s):
             if i != j:
-                print(i, j)
+                print(i, j, dist[i][j])
                 total += dist[i][j]
     
     return total/2
