@@ -2,17 +2,37 @@
 from sys import stdin, stdout
 from math import sqrt
 
+# For APSP
+def floydWarshall(graph, pos):
+    dist = [[None for c in range(len(graph))] for r in range(len(graph))] # 2D array to store distances
+    
+    for u in graph:
+        for v in graph[u]:
+            dist[u][v] = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
+      
+    for r in range(len(graph)):
+        for u in graph:
+            for v in graph[u]:
+                tense = dist[u][r] + dist[r][v]
+                if dist[u][v] > tense:
+                    dist[u][v] = tense
+                    
+    return dist
+                
+
 # no duplicate roads or intersections
 def input():
     # vertices
     n = int(stdin.readline())
-    graph = [[float('inf') for col in range(n)] for row in range(n)] # 2D array for storage of position VxV
-    pos = []
+    graph = dict() # adjacency list
+    pos = [] # list of pos ([vertex] = pos = (x, y))
+    
     for i in range(n):
         x, y = stdin.readline().split(' ')
         x = int(x)
         y = int(y)
         
+        graph[i] = set() # add empty set to graph
         pos.append((x, y)) # store unique coords in list
     
     # connections/edges
@@ -22,28 +42,31 @@ def input():
         a = int(a)
         b = int(b)
         
-        # append distance to 2D array
-        dist = sqrt( (pos[b][0] - pos[a][0])**2 + (pos[b][1] - pos[a][1])**2 )
-        graph[a][b] = (dist)
-        graph[b][a] = (dist)
+        # append edges to adj list
+        graph[a].add(b)
+        graph[b].add(a)
     
-    # add another road that is the shortest
+    # add another road that is the shortest road
     min = float('inf')
     x, y = -1, -1
     for i in range(n):
         for j in range(n):
             if i != j:
-                if graph[i][j] == float('inf') or graph[i][j] == float('inf'): # not already a path we have made
-                    dist = sqrt( (pos[i][0] - pos[j][0])**2 + (pos[i][1] - pos[j][1])**2 )
-                    if dist < min:
+                dist = sqrt( (pos[i][0] - pos[j][0])**2 + (pos[i][1] - pos[j][1])**2 )
+                if dist < min:
+                    if j not in graph[i] or i not in graph[j]:
                         min = dist
                         x, y = i, j
-    
-    graph[x][y] = min
-    return graph
+                        
+    print('min',min,x,y)
+    graph[x].add(y)
+    graph[y].add(x)
+
+    return graph, pos
 
 def main():
-    return
+    graph, pos = input()
+    
+    return floydWarshall(graph, pos)
 
-print(input())
-#stdout.write(str(main()))
+stdout.write(str(main()))
