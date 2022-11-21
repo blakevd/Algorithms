@@ -3,8 +3,8 @@ from sys import stdin, stdout
 from math import sqrt
 
 # For APSP
-def floydWarshall(graph, pos):
-    dist = [[None for c in range(len(graph))] for r in range(len(graph))] # 2D array to store distances
+def FloydWarshall(graph, pos):
+    dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
     
     for u in graph:
         for v in graph[u]:
@@ -13,9 +13,10 @@ def floydWarshall(graph, pos):
     for r in range(len(graph)):
         for u in graph:
             for v in graph[u]:
-                tense = dist[u][r] + dist[r][v]
-                if dist[u][v] > tense:
-                    dist[u][v] = tense
+                #if dist[u][r] != None and dist[r][v] != None:
+                    tense = dist[u][r] + dist[r][v]
+                    if dist[u][v] > tense:
+                        dist[u][v] = tense
                     
     return dist
                 
@@ -67,6 +68,6 @@ def input():
 def main():
     graph, pos = input()
     
-    return floydWarshall(graph, pos)
+    return FloydWarshall(graph, pos)
 
 stdout.write(str(main()))
