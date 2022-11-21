@@ -9,14 +9,14 @@ def FloydWarshall(graph, pos):
     for u in graph:
         for v in graph[u]:
             dist[u][v] = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
-      
+
     for r in range(len(graph)):
         for u in graph:
-            for v in graph[u]:
-                #if dist[u][r] != None and dist[r][v] != None:
-                    tense = dist[u][r] + dist[r][v]
-                    if dist[u][v] > tense:
-                        dist[u][v] = tense
+            for v in graph:
+                tense = dist[u][r] + dist[r][v]
+                #print('u to v:  ',u, r, 'dist ', dist[u][r], dist[u][r], tense)
+                if dist[u][v] > tense:
+                    dist[u][v] = tense
                     
     return dist
                 
@@ -67,7 +67,15 @@ def input():
 
 def main():
     graph, pos = input()
+    dist = FloydWarshall(graph, pos)
     
-    return FloydWarshall(graph, pos)
+    total = 0
+    
+    for i in range(len(dist)):
+        for j in range(len(dist)):
+            if i != j:
+                total += dist[i][j]
+    
+    return total/2
 
 stdout.write(str(main()))
