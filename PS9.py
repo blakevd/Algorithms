@@ -1,7 +1,7 @@
 # Blake Van Dyken
 from sys import stdin, stdout
 from math import sqrt
-
+from copy import deepcopy
 # For APSP
 def FloydWarshall(graph, pos):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
@@ -45,39 +45,46 @@ def input():
         graph[a].add(b)
         graph[b].add(a)
     
-    #print()
+    print()
     # add another road that is the shortest road
-    min = float('inf')
-    x, y = -1, -1
+    extra = [] # list of edges we will try adding
     for i in range(n):
         for j in range(n):
-            if i != j:
-                dist = sqrt( (pos[i][0] - pos[j][0])**2 + (pos[i][1] - pos[j][1])**2 )
-                if dist < min:
-                    #if j not in graph[i] or i not in graph[j]:
-                        min = dist
-                        x, y = i, j
-    if y not in graph[x] and x not in graph[y]:
-        #print('min',min,x,y)
-        graph[x].add(y)
-        graph[y].add(x)
+            if i < j:
+                if i not in graph[j]: # check that its ont in graph
+                   extra.append((i, j))
 
-    return graph, pos
+    return graph, pos, extra
 
 def main():
-    graph, pos = input()
+    graph, pos, extra = input()
+    totals = []
+    
+    if len(extra) == 0:
+        dist = FloydWarshall(graph, pos)
+        total = 0
+        for i in range(len(dist)):
+            for j in range(len(dist)):
+                if i != j:
+                   # print(i, j, dist[i][j])
+                    total += dist[i][j]
 
-    dist = FloydWarshall(graph, pos)
-    
-    total = 0
-    
-    s = len(dist)
-    for i in range(s):
-        for j in range(s):
-            if i != j:
-                #print(i, j, dist[i][j])
-                total += dist[i][j]
-    
-    return total/2
+        return total/2
+
+    for u, v in extra:
+        g = deepcopy(graph)
+        g[u].add(v)
+        g[v].add(u)
+
+        dist = FloydWarshall(g, pos)
+        total = 0
+        for i in range(len(dist)):
+            for j in range(len(dist)):
+                if i != j:
+                   # print(i, j, dist[i][j])
+                    total += dist[i][j]
+        totals.append(total/2)
+
+    return min(totals)
 
 stdout.write(str(main()))
