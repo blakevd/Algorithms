@@ -55,13 +55,13 @@ def input():
             if i != j:
                 dist = sqrt( (pos[i][0] - pos[j][0])**2 + (pos[i][1] - pos[j][1])**2 )
                 if dist < min:
-                    if j not in graph[i] or i not in graph[j]:
+                    #if j not in graph[i] or i not in graph[j]:
                         min = dist
                         x, y = i, j
-                        
-    print('min',min,x,y)
-    graph[x].add(y)
-    graph[y].add(x)
+    if y not in graph[x] and x not in graph[y]:
+        print('min',min,x,y)
+        graph[x].add(y)
+        graph[y].add(x)
 
     return graph, pos
 
@@ -71,9 +71,11 @@ def main():
     
     total = 0
     
-    for i in range(len(dist)):
-        for j in range(len(dist)):
+    s = len(dist)
+    for i in range(s):
+        for j in range(s):
             if i != j:
+                print(i, j)
                 total += dist[i][j]
     
     return total/2
