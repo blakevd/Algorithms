@@ -5,7 +5,8 @@ from math import sqrt
 # For APSP
 def FloydWarshall(graph, pos):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
-    
+    total = 0
+
     for u in graph:
         for v in graph[u]:
             dist[u][v] = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
@@ -16,8 +17,9 @@ def FloydWarshall(graph, pos):
                 tense = dist[u][r] + dist[r][v]
                 if dist[u][v] > tense:
                     dist[u][v] = tense
+                    total += tense
                     
-    return dist
+    return total
 
 # no duplicate roads or intersections
 def input():
@@ -92,4 +94,24 @@ def main():
         graph[v].remove(u)
 
     return min
-stdout.write(str(main()))
+
+def main2():
+    graph, pos, extra = input()
+    min = float('inf')
+
+    if len(extra) == 0:
+        return FloydWarshall(graph, pos)
+
+    for u, v in extra:
+        graph[u].add(v)
+        graph[v].add(u)
+
+        total = FloydWarshall(graph, pos)
+        if total < min:
+            min = total
+        graph[u].remove(v)
+        graph[v].remove(u)
+
+    return min
+
+stdout.write(str(main2()))
