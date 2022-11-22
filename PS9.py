@@ -10,14 +10,16 @@ def FloydWarshall(graph, pos):
     for u in graph:
         for v in graph[u]:
             dist[u][v] = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
-
+    print()
     for r in range(len(graph)):
         for u in graph:
             for v in graph:
                 tense = dist[u][r] + dist[r][v]
                 if dist[u][v] > tense:
                     dist[u][v] = tense
-                    total += tense
+                if r == len(graph)-1:
+                    if u < v:
+                        total += dist[u][v]
                     
     return total
 
@@ -59,44 +61,6 @@ def input():
 
 def main():
     graph, pos, extra = input()
-   
-    # if we have no extra edges to try in the graph
-    if len(extra) == 0:
-        dist = FloydWarshall(graph, pos)
-        total = 0
-        for i in range(len(dist)):
-            for j in range(len(dist)):
-                if i < j:
-                   # print(i, j, dist[i][j])
-                    total += dist[i][j]
-
-        return total
-    # otherwise try adding extra intersection and find APSP
-    min = float('inf')
-    for u, v in extra:
-        graph[u].add(v)
-        graph[v].add(u)
-
-        dist = FloydWarshall(graph, pos)
-        total = 0
-        for i in range(len(dist)):
-            for j in range(len(dist)):
-                if i < j:
-                   # print(i, j, dist[i][j])
-                    total += dist[i][j]
-                    if total > min:
-                        break
-            if total > min:
-                break
-        if total < min:
-            min = total
-        graph[u].remove(v)
-        graph[v].remove(u)
-
-    return min
-
-def main2():
-    graph, pos, extra = input()
     min = float('inf')
 
     if len(extra) == 0:
@@ -114,4 +78,4 @@ def main2():
 
     return min
 
-stdout.write(str(main2()))
+stdout.write(str(main()))
