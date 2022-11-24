@@ -5,23 +5,19 @@ from math import sqrt
 # For APSP
 def FloydWarshall(graph, pos):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
-    total = 0
 
     for u in graph:
         for v in graph[u]:
             dist[u][v] = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
-    print()
+
     for r in range(len(graph)):
         for u in graph:
             for v in graph:
                 tense = dist[u][r] + dist[r][v]
                 if dist[u][v] > tense:
                     dist[u][v] = tense
-                if r == len(graph)-1:
-                    if u < v:
-                        total += dist[u][v]
                     
-    return total
+    return dist
 
 # no duplicate roads or intersections
 def input():
@@ -52,25 +48,46 @@ def input():
     # make list of roads that are not in graph
     extra = [] # list of edges we will try adding
     for i in range(n):
+        min = float('inf')
         for j in range(n):
             if i < j:
-                if i not in graph[j]: # check that its ont in graph
+                if i not in graph[j]: # check that its not in graph
                    extra.append((i, j))
+                   
 
     return graph, pos, extra
 
 def main():
     graph, pos, extra = input()
-    min = float('inf')
-
+    
+    # if we have no extra edges to try in the graph
     if len(extra) == 0:
-        return FloydWarshall(graph, pos)
+        dist = FloydWarshall(graph, pos)
+        total = 0
+        for i in range(len(dist)):
+            for j in range(len(dist)):
+                if i < j:
+                    # print(i, j, dist[i][j])
+                    total += dist[i][j]
 
+        return total
+    # otherwise try adding extra intersection and find APSP
+    min = float('inf')
     for u, v in extra:
         graph[u].add(v)
         graph[v].add(u)
 
-        total = FloydWarshall(graph, pos)
+        dist = FloydWarshall(graph, pos)
+        total = 0
+        for i in range(len(dist)):
+            for j in range(len(dist)):
+                if i < j:
+                   # print(i, j, dist[i][j])
+                    total += dist[i][j]
+                    if total > min:
+                        break
+            if total > min:
+                break
         if total < min:
             min = total
         graph[u].remove(v)
