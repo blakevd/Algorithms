@@ -3,7 +3,7 @@ from sys import stdin, stdout
 from math import sqrt
 
 # For APSP
-def FloydWarshall(graph, pos):
+def FloydWarshall(graph, pos, min):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
 
     for u in graph:
@@ -58,23 +58,58 @@ def commute(dist, min):
 
     return total
 
-def main():
-    graph, pos = input()
-    
+def small(graph, pos):
     # otherwise try adding extra intersection and find APSP
     dist = FloydWarshall(graph, pos)
     min = commute(dist, float('inf'))
     for u in range(len(graph)):
         for v in range(len(graph)):
+            # get min distance edge in u
             if u < v and u not in graph[v]:
                 graph[u].add(v)
-
+                graph[v].add(u)
                 dist = FloydWarshall(graph, pos)
                 total = commute(dist, min)
                 if total < min:
                     min = total
                 graph[u].remove(v)
+                graph[v].remove(u)
     
     return min
+
+def big(graph, pos):
+    # otherwise try adding extra intersection and find APSP
+    dist = FloydWarshall(graph, pos)
+    min = commute(dist, float('inf'))
+
+    dm = float('inf')
+    x, y = -1, -1
+    for u in range(len(graph)):
+        for v in range(len(graph)):
+            # get min distance edge in u
+            if u < v and u not in graph[v]:
+                d = sqrt( (pos[u][0] - pos[v][0])**2 + (pos[u][1] - pos[v][1])**2 )
+                if d < dm:
+                    dm = d
+                    x, y = u, v
+        # try adding smallest edge if we found one
+        if dm != float('inf'):
+            graph[x].add(y)
+            graph[y].add(x)
+            dist = FloydWarshall(graph, pos)
+            total = commute(dist, min)
+            if total < min:
+                min = total
+            graph[x].remove(y)
+            graph[y].remove(x)
+    
+    return min
+
+def main():
+    graph, pos = input()
+    if len(graph) > 65:
+        return big(graph, pos)
+    else:
+        return small(graph, pos)
 
 stdout.write(str(main()))
