@@ -44,53 +44,37 @@ def input():
         # append edges to adj list
         graph[a].add(b)
         graph[b].add(a)
-    
-    # make list of roads that are not in graph
-    extra = [] # list of edges we will try adding
-    for i in range(n):
-        for j in range(n):
-            if i < j:
-                if i not in graph[j]: # check that its not in graph
-                   extra.append((i, j))
 
-    return graph, pos, extra
+    return graph, pos
+
+def commute(dist, min):
+    total = 0
+    for i in range(len(dist)):
+        for j in range(len(dist)):
+            if i < j:
+                total += dist[i][j]
+                if total > min:
+                    return total
+
+    return total
 
 def main():
-    graph, pos, extra = input()
+    graph, pos = input()
     
-    # if we have no extra edges to try in the graph
-    if len(extra) == 0:
-        dist = FloydWarshall(graph, pos)
-        total = 0
-        for i in range(len(dist)):
-            for j in range(len(dist)):
-                if i < j:
-                    # print(i, j, dist[i][j])
-                    total += dist[i][j]
-
-        return total
     # otherwise try adding extra intersection and find APSP
-    min = float('inf')
-    for u, v in extra:
-        graph[u].add(v)
-        #graph[v].add(u)
+    dist = FloydWarshall(graph, pos)
+    min = commute(dist, float('inf'))
+    for u in range(len(graph)):
+        for v in range(len(graph)):
+            if u < v and u not in graph[v]:
+                graph[u].add(v)
 
-        dist = FloydWarshall(graph, pos)
-        total = 0
-        for i in range(len(dist)):
-            for j in range(len(dist)):
-                if i < j:
-                   # print(i, j, dist[i][j])
-                    total += dist[i][j]
-                    if total > min:
-                        break
-            if total > min:
-                break
-        if total < min:
-            min = total
-        graph[u].remove(v)
-        #graph[v].remove(u)
-
+                dist = FloydWarshall(graph, pos)
+                total = commute(dist, min)
+                if total < min:
+                    min = total
+                graph[u].remove(v)
+    
     return min
 
 stdout.write(str(main()))
