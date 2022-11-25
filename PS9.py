@@ -5,7 +5,6 @@ from math import sqrt
 # For APSP
 def FloydWarshall(graph, pos):
     dist = [[float('inf') for v in range(len(graph))] for u in range(len(graph))] # 2D array to store distances
-    total = 0
 
     for u in graph:
         for v in graph[u]:
@@ -17,9 +16,8 @@ def FloydWarshall(graph, pos):
                 tense = dist[u][r] + dist[r][v]
                 if dist[u][v] > tense:
                     dist[u][v] = tense
-                    total += tense
                     
-    return total
+    return dist
 
 # no duplicate roads or intersections
 def input():
@@ -52,14 +50,14 @@ def input():
     for i in range(n):
         for j in range(n):
             if i < j:
-                if i not in graph[j]: # check that its ont in graph
+                if i not in graph[j]: # check that its not in graph
                    extra.append((i, j))
 
     return graph, pos, extra
 
 def main():
     graph, pos, extra = input()
-   
+    
     # if we have no extra edges to try in the graph
     if len(extra) == 0:
         dist = FloydWarshall(graph, pos)
@@ -67,7 +65,7 @@ def main():
         for i in range(len(dist)):
             for j in range(len(dist)):
                 if i < j:
-                   # print(i, j, dist[i][j])
+                    # print(i, j, dist[i][j])
                     total += dist[i][j]
 
         return total
@@ -75,7 +73,7 @@ def main():
     min = float('inf')
     for u, v in extra:
         graph[u].add(v)
-        graph[v].add(u)
+        #graph[v].add(u)
 
         dist = FloydWarshall(graph, pos)
         total = 0
@@ -91,27 +89,8 @@ def main():
         if total < min:
             min = total
         graph[u].remove(v)
-        graph[v].remove(u)
+        #graph[v].remove(u)
 
     return min
 
-def main2():
-    graph, pos, extra = input()
-    min = float('inf')
-
-    if len(extra) == 0:
-        return FloydWarshall(graph, pos)
-
-    for u, v in extra:
-        graph[u].add(v)
-        graph[v].add(u)
-
-        total = FloydWarshall(graph, pos)
-        if total < min:
-            min = total
-        graph[u].remove(v)
-        graph[v].remove(u)
-
-    return min
-
-stdout.write(str(main2()))
+stdout.write(str(main()))
