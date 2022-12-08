@@ -13,17 +13,26 @@ def input():
 
     return graph
 
+# lol made by the AI kinda cool
 def traverse(graph):
-    min = maxsize
-    # loop through all possible graphs
     n = len(graph)
-    for i in range(n):
-        for j in range(permutations(n-i)):
-            print(i, 'j: ', j)
-
+    perm = list(permutations(range(n))) # all possible combinations
+    
+    min = maxsize
+    
+    for p in perm:
+        dist = 0
+        for i in range(n):
+            vertex = (i + 1) % n
+            dist += graph[p[i]][p[vertex]]
+            
+        if dist < min:
+            min = dist
+            
+    return min
 
 def main():
     g = input()
-    return None
+    return traverse(g)
 
 stdout.write(str(main()))
